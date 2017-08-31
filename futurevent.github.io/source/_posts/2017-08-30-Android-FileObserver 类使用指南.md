@@ -5,7 +5,7 @@ tags:
 categories:
     - android
 ---
-有一种知识就是知道与不知道的区别，我们遇到的很多困难都是这种类型，不知道死活都想不到，知道了也就不过如此  
+有一种知识就是知道与不知道的区别，我们遇到的很多困难都是这种类型，不知道死活都想不到，知道了也就不过如此
 最近我们的开发框架在做插件化的功能，用来已插件的形式加载场景和功能（这俩都是开发框架的概念），插件已一个独立apk的形式存在，放在固定的目录下不需要安装，框架启动时就会去加载apk中包裹的插件。有这么个需求，就是该目录下的这些个apk发生变动时 __新增__ , __删除__ , __更新__ 时，能够load或unload或reload 其中对应的插件，说白了就是监控这个目录的变化。
 <!--more-->
 进入正文
@@ -39,22 +39,23 @@ categories:
  */
  ```
 FileObserver 可以监听的事件类型如下：
-| 事件 | 说明|
-| -- | -- |
-|ACCESS | 即文件被访问|
-|MODIFY | 文件被修改 |
-|ATTRIB | 文件属性被修改，如 chmod、chown、touch 等|
-|CLOSE_WRITE | 可写文件被 close|
-|CLOSE_NOWRITE | 不可写文件被 close|
-|OPEN |文件被 open|
-|MOVED_FROM | 文件被移走，如 mv|
-|MOVED_TO | 文件被移来，如 mv、cp|
-|CREATE | 创建新文件|
-|DELETE | 文件被删除，如 rm|
-|DELETE_SELF | 自删除，即一个可执行文件在执行时删除自己|
-|MOVE_SELF | 自移动，即一个可执行文件在执行时移动自己|
-|CLOSE| 文件被关闭，等同于(IN_CLOSE_WRITE | IN_CLOSE_NOWRITE)|
-|ALL_EVENTS | 包括上面的所有事件|
+
+| 事件 | 说明 |
+| :----- | :----- |
+| ACCESS | 即文件被访问 |
+| MODIFY | 文件被修改 |
+| ATTRIB | 文件属性被修改，如 chmod、chown、touch 等 |
+| CLOSE_WRITE | 可写文件被 close |
+| CLOSE_NOWRITE | 不可写文件被 close |
+| OPEN |文件被 open |
+| MOVED_FROM | 文件被移走，如 mv |
+| MOVED_TO | 文件被移来，如 mv、cp |
+| CREATE | 创建新文件 |
+| DELETE | 文件被删除，如 rm |
+| DELETE_SELF | 自删除，即一个可执行文件在执行时删除自己 |
+| MOVE_SELF | 自移动，即一个可执行文件在执行时移动自己 |
+| CLOSE| 文件被关闭，等同于(IN_CLOSE_WRITE  IN_CLOSE_NOWRITE) |
+| ALL_EVENTS | 包括上面的所有事件 |
 
  FileObserver的实现也很简单，创建自己的obsever类继承自FileObserver即可，只需重写唯一的一个abstract方法 onEvent 。示例如下：
 
