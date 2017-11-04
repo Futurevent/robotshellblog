@@ -1,5 +1,5 @@
 hexo generate
-cp -r public/* ~/code/futurevent
+cp -r public/* ../../futurevent
 cd ~/code/futurevent
 git pull
 git add .
