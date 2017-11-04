@@ -1,5 +1,6 @@
 ---
-title: Linux 版本控制工具之Ｒａｂｂｉｔｖｃｓ
+title: Linux 版本控制工具之rabbitvcs
+data: 2017-11-04
 tags:
   - 工具
 categories:
@@ -8,7 +9,7 @@ date: 2017-11-04 12:08:10
 ---
 
 
-新公司的文档管理居然使用ｓｖｎ，不知道适合原因．很久不用有一些忘却了.之前在ｗｉｎ下用的是TortoiseSVN，在ｕｂｕｎｔｕ下，与之及其相似的是ｒａｂｂｉｔｖｃｓ．
+新公司的文档管理居然使用ｓｖｎ，不知道适合原因．很久不用有一些忘却了.之前在win下用的是TortoiseSVN，在ubuntu下，与之及其相似的是rabbitvcs．
 [官网地址](http://rabbitvcs.org/)
 <!--more-->
 下面是来自官方打介绍
