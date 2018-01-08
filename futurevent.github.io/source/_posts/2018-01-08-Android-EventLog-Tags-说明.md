@@ -1,10 +1,12 @@
 ---
 title: Android-EventLog-Tags 说明
 tags:
-    - android
+  - android
 categories:
-    - android
+  - android
+date: 2018-01-08 23:35:54
 ---
+
 # 简介
 Event Log, 官方的解释为
 >System diagnostic event record. System diagnostic events are used to record certain system-level events (such as garbage collection, activity manager state, system watchdogs, and other low level activity), which may be automatically collected and analyzed during system development.
