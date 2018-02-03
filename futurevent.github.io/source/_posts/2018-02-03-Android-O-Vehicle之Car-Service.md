@@ -457,15 +457,14 @@ private void dispatchEvents(List<VehiclePropValue> values, PowerEventListener li
 如此则回调到CarPowerManagementService中，最终完成对AP_POWER_STATE 和 DISPLAY_BRIGHTNESS属性变化的处理。
 ### CarService 向 Vehicle Hal Interface Set 属性值。
 相对简单一些，已Power Management 在初始化时向Vehicle 同步启动完成状态为例
-```mermaid
+```flow
+st=>start: Start
+e=>end: End
+sendBootComplete=>operation: 调用PowerHalService的sendBootComplete
+VehicleHalSet=>operation: 调用VehicleHal的set方法, 使用属性IdAP_POWER_STATE,创建出VehiclePropValueStter对象
+VehicleHalTo=>operation: 调用VehicleProValuesetter对象的to方法, 参数为属性的值BOOT_COMPLETE
+submit=>operation: to 方法中调用了submit方法, submit方法最终使用HalClient的setValue 方法将VehiclePropValue 对象设置到VehicleHal Interface层
 
-graph TD
-start(Start)-->sendBootComplete[调用PowerHalService的sendBootComplete]
-sendBootComplete-->setPowerState[setPowerState]
-setPowerState-->VehicleHalSet[调用VehicleHal的set方法, 使用属性IdAP_POWER_STATE,创建出VehiclePropValueStter对象]
-VehicleHalSet-->VehicleHalTo[调用VehicleProValuesetter对象的to方法, 参数为属性的值BOOT_COMPLETE]
-VehicleHalTo-->submit[to 方法中调用了submit方法, submit方法最终使用HalClient的setValue 方法将VehiclePropValue 对象设置到VehicleHal Interface层]
-submit--> End(End)
-
+st->sendBootComplete->VehicleHalSet->VehicleHalTo->submit->e
 ```
 至此，CarService 以Power Management 举例的分析就结束了，各业务的Service具体实现可能不同，但是整体结构大体上是一致的。
