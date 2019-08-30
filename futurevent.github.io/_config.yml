@@ -16,6 +16,14 @@ url: http://robotshell.com
 root: /
 permalink: :year/:month/:day/:title/
 permalink_defaults:
+hexo-tag-dplayer:
+  cdn:
+    - https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.js
+    - https://cdn.jsdelivr.net/npm/dplayer/dist/DPlayer.min.css
+  default:
+    api: https://api.prprpr.me/dplayer/
+    loop: yes
+    screenshot: yes
 
 baidu_url_submit:
   count: 100 # 提交最新的一个链接
