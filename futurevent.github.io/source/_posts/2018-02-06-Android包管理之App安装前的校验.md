@@ -1,5 +1,6 @@
 ---
 title: Android包管理之App安装前的校验
+id: package verify
 tags: android
 categories: android
 date: 2018-02-06 21:32:49

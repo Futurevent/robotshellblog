@@ -1,5 +1,6 @@
 ---
 title: Harmony&Fuchsia的相遇
+id: harmony&fuchsia
 tags:
   - OS
 categories:

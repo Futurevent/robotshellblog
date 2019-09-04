@@ -1,5 +1,6 @@
 ---
 title: Google的Fuchsia OS到底是什么
+id: what's fuchsia os
 tags:
   - OS
 categories:

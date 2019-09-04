@@ -1,5 +1,6 @@
 ---
 title: ubuntu grub 引导丢失修复
+id: grub repair
 tags:
   - 技巧
 categories:

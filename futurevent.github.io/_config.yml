@@ -14,7 +14,7 @@ timezone:
 ## If your site is put in a subdirectory, set url as 'http://yoursite.com/child' and root as '/child/'
 url: http://robotshell.com
 root: /
-permalink: :year/:month/:day/:title/
+permalink: :year/:month/:day/:category/:id/
 permalink_defaults:
 hexo-tag-dplayer:
   cdn:
@@ -69,6 +69,20 @@ index_generator:
 # Category & Tag
 default_category: uncategorized
 category_map:
+  Blog 写作 教程: blog-skill
+  Atom 教程: atom-skill
+  Hexo 教程: hexo-skill
+  Machine Learning: machine-learning
+  OS: os
+  android: android
+  测试: test
+  java: java
+  工具: tool
+  技巧: skill
+  旧日往昔: old
+  机器人OS: robot-os
+  架构: arch
+  物联网: iot
 tag_map:
 
 # Date / Time format

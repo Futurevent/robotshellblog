@@ -1,5 +1,6 @@
 ---
 title: android O 电源管理之从automotive谈起
+id: power automotive
 tags: android
 categories: android
 date: 2018-02-04 00:15:49

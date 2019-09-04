@@ -1,5 +1,6 @@
 ---
 title: Android-EventLog-Tags 说明
+id: eventlog
 tags:
   - android
 categories:

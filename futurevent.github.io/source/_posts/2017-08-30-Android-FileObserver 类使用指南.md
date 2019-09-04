@@ -1,6 +1,7 @@
 ---
 title: Android FileObserver 类使用指南
 data: 2017-08-30
+id: fileobserver
 tags:
     - android
 categories:

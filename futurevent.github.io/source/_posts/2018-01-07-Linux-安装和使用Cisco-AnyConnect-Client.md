@@ -1,5 +1,6 @@
 ---
 title: Linux-安装和使用Cisco AnyConnect Client
+id: anyconnect
 tags:
   - 工具
 categories:

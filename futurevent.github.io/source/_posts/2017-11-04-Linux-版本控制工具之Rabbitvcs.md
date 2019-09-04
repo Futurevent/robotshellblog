@@ -1,6 +1,7 @@
 ---
 title: Linux 版本控制工具之rabbitvcs
 data: 2017-11-04
+id: rabbitvcs
 tags:
   - 工具
 categories:
