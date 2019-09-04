@@ -11,7 +11,7 @@ android o 在源码工程/package/service/目录下新增了一个目录Car, 做
 # android O automotive 框架层中的电源管理
 ## Car Power Management 框架
 源码分析在关于[Android O Vehicle](http://www.robotshell.com/2018/02/03/Android-O-Vehicle%E4%B9%8BCar-Service/)的相关文章中有详细描述，此处不在赘述，上一张框架图如下：
-![car power](http://ovfro7ddi.bkt.clouddn.com/android%20automotive%20powermanagement%20arch.png)
+{% asset_img AndroidAutomotivePowermanagementArch.png 安卓汽车电源管理架构图 %}
 ## androidO automotive 中定义的AP Power 状态
 Android Vehicle 的电源管理概括起来两件事：同步android与车载MCU的电源状态和通过PowerManager的API控制android的电源状态。
 
@@ -39,7 +39,7 @@ SHUTDOWN_PREPARE 状态携带参数 VehicleApPowerStateShutdownParam，该参数
 | SHUTDOWN_ONLY        | 3   | 允许延迟关机                   |
 
 这五种状态间的切换关系如下：
-![vehicle power state machine](http://ovfro7ddi.bkt.clouddn.com/Vehicle%20Power%20Ap%20State%20machine.png)
+{% asset_img VehiclePowerApStateMachine.png 车辆电源状态机 %}
 ### AP_POWER_STATE set的值 (AP --> VMCU)
 AP开机或其他业务需求触发或响应VMCU对AP的电源管理需求的过程中，需要向VMCU同步AP的电源变化，在VehiclePropertyType 中有如下定义:
 
@@ -59,15 +59,14 @@ AP开机或其他业务需求触发或响应VMCU对AP的电源管理需求的过
 ## Android 电源管理
 automotive 通过调用 PowerManager的API实现对Android的电源管理，android 系统的电源管理牵涉的模块非常的多，但是其主要框架是以PowerManagerService核心的，PowerManagerService 做为系统Service与其他系统Service 一起在SystemServer中被初始化。
 ### android 的电源管理整体框架
-![电源管理框架](http://ovfro7ddi.bkt.clouddn.com/Android_Power_Arc.png)
+{% asset_img AndroidPowerArc.png 安卓电源框架 %}
 由图可知，电源管理框架可分为如下基层：
 - 应用层：例如Vehicle的电源管理、设置等其他应用等。
 - Framework层：主要实现android电源管理的策略，负责调度和通知其他模块对电源管理做出响应。主要分为JavaFramework 和以com_android_server_power_PowerManagerService.cpp为核心的nativeFramework。
 - HAL层：主要包含传统的hardware_legacy中的power.c和android O 新增的Vendor Interface 对应的Hardware/Interface/Power 中的power.hal 部分。
 - Kernel层：主要包含linux的电源管理策略，以及对suspend lock的控制和reboot系统调用。
 ### PowerManagerService 的基本结构
-![PowerManagerService 基本结构](http://ovfro7ddi.bkt.clouddn.com/PowerManagerService_class.png)
-
+{% asset_img PowerManagerServiceClass.png PowerManagerService关键类图 %}
 ### automotive 中调用到的PowerManager相关部分
 主要在SystemInterfaceImpl中
 
@@ -97,7 +96,7 @@ st->A->B->C->D->E->F->G->H->I->e
 - goToSleep
 调用goToSleep的时候第三个参数为GO_TO_SLEEP_FLAG_NO_DOZE(Go to sleep flag: Skip dozing state and directly go to full sleep)
 这里提到的Doze 模式,是android 6.0 后新增的特性
-![Doze](http://img.blog.csdn.net/20170412142548617?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvQ2xpbmd0b00=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/Center)
+{% asset_img Doze.png Doze%}
 如上图：Doze模式提供一个复发的maintenance window给app去使用网络和处理挂起的操作
 Doze 模式下的限制:
   1. 网络访问功能被关闭
@@ -110,8 +109,7 @@ Doze 模式下的限制:
   6. 系统不允许JobScheduler运行
 
 Doze 主要由DeviceIdleController实现，在DeviceIdleController中通过设备逐渐的满足条件，使得系统一步步的进入到doze状态下，流程如下图(android O貌似与此图有些微不同)：
-![Doze state](http://ovfro7ddi.bkt.clouddn.com/Doze_DeviceIdleController_state.png)
-
+{% asset_img DozeDeviceIdleControllerstate.png DozeState %}
 分析源码可知，goToSleep 的实现最终也是依赖WakeLock锁来实现的，实现的流程先省略。且往下看。
 
 ### WakeLock
@@ -142,13 +140,12 @@ android 中其他锁的定义如下表：
 | ON_AFTER_RELEASE = 0x20000000      | 和用户体验有关，当wakelock释放后如果没有该标志，屏幕会立即黑屏，如果有该标志，屏幕会亮一小会然后在黑屏。 |   不能和PARTIAL_WAKE_LOCK 一起用                             |
 
 对于锁的使用无非就是两种操作，acquire和release。对于这两个过程，见如下流程图：
-![wakelock acqure & release](http://ovfro7ddi.bkt.clouddn.com/wakelock_acquire_release.png)
-
+{% asset_img WakelockAcquireRelease.png WakeLock 申请与释放的流程图%}
 ### Wakefulness
 PowerManagerService 中的 mWakefulness 用来指示当前设备所处的状态，它有四种取值
 
-| Wakefulness          | 值  | 说明                                               |
-| -------------------- | --- | -------------------------------------------------- | ------------------ | --- |
+| Wakefulness          | 值  | 说明 |
+| -------------------- | --- | --- |
 | WAKEFULNESS_ASLEEP   | 0   | 表示系统当前处于休眠状态，只能通过调用wakeup()唤醒|
 | WAKEFULNESS_AWAKE    | 1   | 表示系统当前处于正常运行状态                    |
 | WAKEFULNESS_DREAMING | 2   | 表示系统当前处于屏保状态                       |
@@ -156,8 +153,7 @@ PowerManagerService 中的 mWakefulness 用来指示当前设备所处的状态�
 
 在PowerManagerService 中无论是开关机，还是影响电源管理的用户行为（UserActivity）的管理，还是对wakelock锁的使用，（PowerManagerService中有两个很重要的底层SuspendBlockerLock:CPU锁————PowerManagerService.WakeLocks和Display锁————PowerManagerService.Display，系统通过向设备节点文件/sys/power/wake_lock 和 /sys/power/wake_unlock写入这两个锁的名字来控制cpu和display），最终都会调用到一个很重要的方法updatePowerStateLocked，该方法是整个PowerManagerService的核心。
 其大体调用逻辑如下：
-![updatePowerStateLocked](http://ovfro7ddi.bkt.clouddn.com/UpdatePowerStateLocked.png)
-
+{% asset_img UpdatePowerStateLocked.png UpdatePowerStateLocked流程图 %}
 ---
 
 ## Android HAL 及更底层的电源管理
