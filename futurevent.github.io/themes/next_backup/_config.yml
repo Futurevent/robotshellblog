@@ -56,7 +56,7 @@ menu:
   archives: /archives/ || archive
   # schedule: /schedule/ || calendar
   # sitemap: /sitemap.xml || sitemap
-  board: /board || book
+  board: /board/ || book
   about: /about/ || user
   # commonweal: /404/
 
