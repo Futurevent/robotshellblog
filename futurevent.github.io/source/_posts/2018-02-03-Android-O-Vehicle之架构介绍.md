@@ -1,6 +1,6 @@
 ---
 title: Android O Vehicle之架构介绍
-id: vehcle arch
+id: vehclearch
 tags:
   - android
 categories:

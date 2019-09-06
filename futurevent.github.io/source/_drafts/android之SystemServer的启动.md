@@ -1,0 +1,7 @@
+---
+title: android之SystemServer的启动
+id: BootSystemServer
+tags: android
+categories: android
+---
+Android系统中恐怕是没有任何一个进程有SystemServer重要了。Android的大量核心Service都运行在SystemServer上，这些核心的Service笼统的讲几乎能代表整个Android的Framework层。Android区别于Linux的关键又在于Framework层，所以更进一步讲SystemServer几乎又可代表整个Android系统了。
