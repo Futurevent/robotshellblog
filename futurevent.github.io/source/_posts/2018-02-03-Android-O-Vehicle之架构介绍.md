@@ -58,4 +58,4 @@ int getCarConnectionType() = 1;
 ```
 当调用getCarManager时会调用到mService的getCarService方法，再使用service name 与返回的对应Service的IBinder对象，一同创建出client端的manager对象。
 - mServiceMap 用来保存getCarManager创建出的manager对象，当再次需要获取该manager时即从此map中返回。
-接下来CarService [Android O Vehicle之Car Service](http://www.robotshell.com/2018/02/03/Android-O-Vehicle%E4%B9%8BCar-Service/)
+接下来CarService [Android O Vehicle之Car Service](https://www.robotshell.com/2018/02/03/android/carservice/)
