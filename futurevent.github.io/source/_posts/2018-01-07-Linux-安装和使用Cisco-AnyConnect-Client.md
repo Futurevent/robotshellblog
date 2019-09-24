@@ -197,8 +197,8 @@ $ _
 $ vpnui
 ```
 在弹出的界面中输入要连接的服务器，点击右侧的设置图标，弹出如下界面
-![anyconnect2](http://ovfro7ddi.bkt.clouddn.com/anyconnct2.png) 取消图【Block connections to untrusted servers】前的选择，然后点击【close】按钮关闭设置，点击连接进行连接，连接过程中若弹出以下界面
-![anyconnect1](http://ovfro7ddi.bkt.clouddn.com/anyconnet1.png)
+{% asset_img anyconnct2.png %}
+{% asset_img anyconnet1.png %}
 点击 按钮【Connect Anyway】 之后按照提示依次输入从矩阵研究所获得的AnyConnect 账号和密码即可连接成功。
 
 ## 使用Csico AnyConnect Command Client 翻墙

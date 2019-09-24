@@ -11,8 +11,10 @@ date: 2018-02-03 18:28:31
 Android Automotive 是 Android Orea 中的一个特色功能，从AOSP的代码上看，android automotive 已经包含了从app层到framework层到hal层的各层级结构。本文简单介绍 Android Orea Vehicle 的架构形式
 <!-- more -->
 ### 层次结构
-Google [automotive](https://source.android.com/devices/automotive/?hl=zh-cn) 给出的架构如下图。
-![Android_automotive_arch](http://ovfro7ddi.bkt.clouddn.com/vehicle_hal_arch.png)
+Google
+
+{% asset_img vehicle_hal_arch.png Android automotive arch %}
+[automotive](https://source.android.com/devices/automotive/?hl=zh-cn) 给出的架构如下图。
 从图中看，android vehicle 可划分为三层：
 - Car API
 Car API 中包含与Car 相关的各种 manager API，通过这些manager 对app提供 car service 所能提供的服务，主要实现在/packages/services/Car/car-lib/目录下

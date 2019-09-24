@@ -12,7 +12,7 @@ date: 2018-02-06 21:32:49
 最近在做车机系统的时候，大家讨论热修复，聊到在海外渠道以及一些海外应用商店平台上，禁止带有热修复功能的应用上架，甚至带有热修复功能的app安装都不会成功。聊到此处想起了Package Verification，料想使用此特性实现的。
 早在android J 中就在PackageManagerService源码中加入了此特性。大体思路是，在安装应用前会发送一个需要对此包进行验证的广播，该广播可叫做Verify Request，如果系统中有实现了该广播的Receiver，则该应用被叫做Verifier，则Verifier取得广播中携带的附属信息，包括包的路径等，则通过或是扫描该包或是对比其他信用，总之对要安装的这个应用做出校验，然后调用PowerManager的接口告诉PowerManagerService 本次校验是否通过，通过则继续执行安装过程，否则提示用户安装被拒绝。也可以讲，android通过这样的方式，将android包安装校验这一任务外包给了第三方应用（通常为应用商店等）进行校验。
 比如校验不通过会弹出如下的界面(就算没见过这个，也见过类似的吧)：
-![package verifier failure](http://ovfro7ddi.bkt.clouddn.com/android-pkgverify.png)
+{% asset_img android-pkgverify.png %}
 
 # 使用Package Verification
 ## Verify 流程如下：
@@ -338,8 +338,7 @@ The following process executes in Package Manager Service.
 - Intent.ACTION_PACKAGE_ADDED: If the new ( Intent.ACTION_PACKAGE_REPLACED): the case of an update
 
 流程如下图：
-![package installer](http://ovfro7ddi.bkt.clouddn.com/Package%20Installer.jpg)
-
+{% asset_img PackageInstaller.jpg %}
 ### PackageManager 详细介绍：
 1. [In Depth: Android Package Manager and Package Installer](https://dzone.com/articles/depth-android-package-manager)
 2. [Android パッケージインストール処理のしくみを追う](http://dsas.blog.klab.org/archives/52069323.html#PackageManagerService.FileInstallArgs.doPostInstall)
