@@ -80,18 +80,20 @@ Fuchsia使用组件化技术来构造整个具有组合能力的软件新系统�
 ComponentManager是Fuchsia组件框架的核心，它负责管理各组件的生命周期，对各组件进行授权管理和保持各组件的独立运行。
 系统在启动的早期就启动组件管理器，然后组件管理器首先启动根组件，然后根组件像组件管理器发出请求，然后启动设备管理、文件系统、网络协议栈及其他必要的服务。
 随着越来越多的组件启动，整个Fuchsia恢复生机，最终通过session framework启动用户交互，然后用户就可以控制系统了。
-```sequence
+```mermaid
+sequenceDiagram
+
 participant BootProcess
 participant ComponentManager
 participant RootComponent
 participant OtherComponent
 participant SessionFramework
 
-BootProcess->ComponentManager: 启动
-ComponentManager->RootComponent: 启动
-RootComponent->ComponentManager: 请求启动核心Component
-ComponentManager->OtherComponent: 启动设备管理、文件系统等
-BootProcess->SessionFramework: 启动UI
+BootProcess->>ComponentManager: 启动
+ComponentManager->>RootComponent: 启动
+RootComponent->>ComponentManager: 请求启动核心Component
+ComponentManager->>OtherComponent: 启动设备管理、文件系统等
+BootProcess->>SessionFramework: 启动UI
 ```
 
 # 组件实例
