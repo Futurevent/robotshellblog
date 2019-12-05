@@ -1,0 +1,125 @@
+---
+title: Fuchsia模块化的四大组件之二
+tags: OS
+id: modular component2
+categories: OS
+---
+参考前文：
+[Fuchsia模块化](https://www.robotshell.com/2019/11/20/os/modular/)
+[Fuchsia模块化的四大组件之一](https://www.robotshell.com/2019/11/28/os/modular%20component/)
+
+在前文对于[Fuchsia模块化](https://www.robotshell.com/2019/11/20/os/modular/)的介绍中提到，用户可以通过开发module、agent、entryprovider类别的组件来实现具体的业务逻辑，扩展系统的能力。这三大组件再结合由module组合而成的story，可以称之为是fuchsia系统内的四大组件。本文依次介绍这几种组件都是些什么。
+<!--more-->
+
+# Agent
+Agent组件运行于Story组件之外，agent没有UI界面。通常在单一的会话中，agent组件是单例的。Agent组件通常用来组织执行任务，可以将自己注册到系统框架中，在有需要时，框架可以唤起agent并执行任务。Agent用来向其他组件提供服务，其他组件（module、shell 或者是其他agent)可以连接到agent上，获取agent所提供的服务。
+
+## 环境
+Agent可以访问模块化组件提供的如下两项服务：
+- fuchsia.modular.ComponentContext
+
+用来获取组件化架构中各组件提供的服务
+
+- fuchsia.modular.AgentContext
+
+用来执行agent的特有功能，例如创建实体引用、调度任务等。
+
+Agent通常需要向组件化框架提供如下两种服务：
+
+- fuchsia.modular.Agent
+
+使用该服务框架可以转发其他组件的请求给该agent，agent收到请求后运行任务。
+
+- fuchsia.modular.Lifecycle
+
+用来接收框架的生命周期的管理信号
+
+上述的几个服务在agent和框架之间建立了通信的通道，同时agent也可以向其他组件提供自定义的FIDL接口。
+
+## 生命周期管理
+对于大多数agent，当其与框架建立连接时，框架将会分配AgentController给它。而当AgeentController与框架的连接断开且当前没有正在执行的任务时，agent将被框架终止。
+Agent的AgentController可以由session mgr进行管理，在session的活跃期间，agent也将处于活跃状态。
+
+## 通信机制
+组件与agent通信，有两种方式：自定义fidl服务 或者 消息队列。采取哪种方式，取决于具体的使用情况，FIDL的方式要求客户端和服务端同时存活，而消息对列的方式，消息的发送者和接收者可以有不同的声明周期。
+
+### FIDL服务
+客户端通过调用fuchsia::modular::Agent.Connect向模块化框架中的fuchsia.sys.ServiceProvider请求agent服务，调用成功将返回给调用者所请求的agent的唯一标识。任何添加到ServiceProvider中的service都可以通过Connect调用被获取。
+当一个module在它的ComponetContext上调用ConnectToAgent，模块化框架将进行两步操作，一方面返回一个AgentController对象，用来控制被连接的agent的生命周期，直到调用AgentController的close方法，该agent将持续存活。当有多个客户端连接到该agent时，直到最后一个AgentController的close被调用，该Agent才会被框架所终止；另一方面框架通过ServiceProvider转发连接请求给正确的agent，并传递给agent一个唯一标识客户端的字符串。
+
+### 消息队列
+通过消息队列发送的消息的方式，使得Module与Agent的生命周期分离，Agent向Module提供一个消息队列，Module可向该队列发送消息，而Agent监听该队列，当有消息到来时进行处理。
+
+# Entity Provider
+在之前的文章中曾经介绍过Entity，请参考[Fuchsia：万物皆实体](https://www.robotshell.com/2019/09/16/os/entity/)
+
+Entity Provider实际上是个概念上的组件，Module、Agent等能对外提供Entity引用的组件皆可认为是一个组件的提供者。
+
+## 何谓实体
+从概念上将，实体就是一坨数据，有固定的类型。Agent可以创建实体并且在Module或者其他Agent间传递实体，该实体是属于创建它的Agent的，此Agent需要在其他组件访问该实体时向该实体填充数据。
+实体是组件间传递结构化的语义数据的主要机制。举个例子，Google联系人Agent，可以创建com.fuchsia.Contact类型的实体对象用来表示一个联系人实体，联系人实体可以提供给需要联系人实体的组件使用，当其他组件需要一个联系人实体时，模块化组件调起Google联系人Agent，agent为其提供实体的应用及实体内部中的数据。
+
+## Agent如何产生实体
+Agent通过调用如下方法产生实体
+```
+AgentContext.GetReferenceFactory().CreateReference(cookie)
+```
+其中的参数cookie用来标识一个实体对象。例如：cookie可以是字符串"joe@domain.com"，这个cookie可以用来标识一个名字叫joe的Contact类型的实体。当此方法被调用，将会返回一个实体应用的标识字符串。通过这个引用可以获取到实体中存储的数据，实体的应用可以被存储在磁盘上、ledger中，也可以在组件间传递。因为实体引用可以被存储在ledger中，意味着实体可以跨设备使用，可以在另外的设备上对该引用进行解引用，从而获取实体中存储的数据。
+如下为创建一个实体的代码
+```c++
+auto component_context = sys::ComponentContext::Create();
+auto agent_ctx = component_context->svc()
+      ->Connect<fuchsia::modular::AgentContext>();
+
+fuchsia::modular::EntityReferenceFactory factory;
+agent_ctx->GetEntityReferenceFactory(factory.NewRequest());
+factory->CreateReference("iamaperson@google.com", [] (std::string entity_reference) {
+  // Pass the |entity_reference| to a Module or Agent for consumption.
+});
+```
+## Module如何产生实体
+Module产生的实体的声明周期只存在于Module存活期间，当组合该Module的Story被删除后，Story中的Module所制造的实体引用将全部失效。Moulde通过调用ModuleContext.CreateEntity()创建实体对象，该调用需要提供实体的类型和实体的数据。
+示例如下：
+```c++
+auto component_context = sys::ComponentContext::Create();
+auto module_ctx = component_context->svc()
+      ->Connect<fuchsia::modular::ModuleContext>();
+
+fuchsia::mem::Buffer data;
+fsl::StringFromVmo("iamaperson@google.com", &data);
+module_ctx->CreateEntity("com.fuchsia.Contact", std::move(data).ToTransport(),
+                          entity.NewRequest(), [] (std::string entity_reference) {
+  // Pass the |entity_reference| to a Module or Agent for consumption.
+});
+```
+
+## Agent或者Module如何从实体中取得数据
+组件从实体中获取数据分两步，第一步将一个实体应用解析为一个实体接口，第二部通过此实体接口获得该实体的类型及数据。
+实体引用的解引用，如下
+```c++
+ComponentContext.GetEntityResolver().ResolveEntity(reference)
+```
+然后通过如下两个方法获取实体类型及数据
+```c++
+Entity.GetTypes()
+Entity.GetData(typename)
+```
+完整实例如下：
+```c++
+auto component_context = sys::ComponentContext::Create();
+auto component_ctx = component_context->svc()
+      ->Connect<fuchsia::modular::ComponentContext>();
+
+fuchsia::modular::EntityResolverPtr resolver;
+fuchsia::modular::EntityPtr entity;
+component_ctx->GetEntityResolver(resolver.NewRequest());
+
+resolver->ResolveEntity(entity_reference, entity.NewRequest());
+entity->GetData("com.fuchsia.Contact", [] (fuchsia::mem::BufferPtr data) {
+    // ...
+});
+```
+
+## Agent如何为实体提供数据
+Agent通过实现EntityProvider接口并导出给矿浆的方式来为实体提供数据。当组件调用Entity.GetData(type)时，框架首先唤起创建该实体引用的Agent，然后调用该Agent实现了的EntityProvider.GetData(cookie, type)方法，在此方法中即可实现数据的提供逻辑。
+如此看来，也可将Entity Proider可以看做是实现了EntityProvider接口的组件。
