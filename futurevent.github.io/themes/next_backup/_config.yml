@@ -54,9 +54,10 @@ menu:
   categories: /categories/ || th
   tags: /tags/ || tags
   archives: /archives/ || archive
+  story: https://www.jianshu.com/nb/41505096 || book
   # schedule: /schedule/ || calendar
   # sitemap: /sitemap.xml || sitemap
-  board: /board/ || book
+  board: /board/ || comment
   about: /about/ || user
   # commonweal: /404/
 
