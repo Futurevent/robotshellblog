@@ -3,7 +3,9 @@ title: 简述Fuchsia内核Zircon
 tags: OS
 id: zircon
 categories: OS
+date: 2019-12-25 16:43:25
 ---
+
 Zircon是Fuchsia系统的内核。严格的讲，应该说Zircon是Fuchsia系统的核心，是Fuchsia系统的最底一层（回想下Fuchsia系统的四层蛋糕结构）。它由一个微内核（/zircon/kernel)和少量的用户空间代码组成。这部分用户空间代码是一些核心的服务、驱动和类库等（/zircon/system/necessary)，用于系统引导，与底层硬件交互、加载用户空间的进程等。Fuchsia将在Zircon之上构建出庞大的OS。
 <!--more-->
 Zircon对外提供系统调用，用来管理进程、线程、虚拟内存等，提供进程间通信的机制，监控内核中对象状态的改变，提供锁机制等。内核管理了大量的各种类型的对象，用户空间可以通过系统调用直接读取这些对象，这些东西通常是实现了分发接口的C++对象。这些C++类定义在kernel/object目录下，这些类大部分是一些自包含的C++类，一部分是底层LK（little kernel zircon内核的内核，一个嵌入式的内核）原语的包装类。下面是，当前代码中的这部分类的列表。
